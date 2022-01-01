@@ -1,0 +1,27 @@
+# >>> meta info
+model_name = 'bert_rnn'
+
+# >>> environment
+seed = 1
+
+# >>> model
+hidden_size = 768
+filter_sizes = [2, 3, 4]
+num_filters = 256
+dropout = 0.1
+num_classes = 10
+num_layers = 2
+
+# >>> training
+epochs = 3
+batch_size = 128
+pad_size = 32
+base_lr = 5e-5
+warmup = 0.05
+
+# >>> data
+name = 'TUHCNews'
+data_root = 'dataset'
+train_path = 'dataset/train.txt'
+val_path = 'dataset/dev.txt'
+test_path = 'dataset/test.txt'

@@ -1,0 +1,2 @@
+- https://github.com/mozillazg/python-pinyin
+- https://github.com/berniey/hanziconv
