@@ -6,7 +6,7 @@ import torch
 from sklearn import metrics
 from tqdm import tqdm
 
-from data import test_dataloader
+from data import test_dataloader, CLASSES
 from models import init_model
 
 
@@ -26,8 +26,6 @@ if __name__ == '__main__':
 
     device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
     model = init_model(config).to(device)
-
-    class_list = [x.strip() for x in open('dataset/class.txt').readlines()]
 
     # test
     model.load_state_dict(torch.load(args.checkpoint))
@@ -49,7 +47,7 @@ if __name__ == '__main__':
             predict_all = np.append(predict_all, pred)
 
     acc = metrics.accuracy_score(labels_all, predict_all)
-    report = metrics.classification_report(labels_all, predict_all, target_names=class_list, digits=4)
+    report = metrics.classification_report(labels_all, predict_all, target_names=CLASSES, digits=4)
     confusion = metrics.confusion_matrix(labels_all, predict_all)
 
     print('TTest Acc: {:>6.2%}'.format(acc))

@@ -12,8 +12,7 @@ base_lr = 5e-5
 warmup = 0.05
 
 # >>> data
-name = 'TUHCNews'
 data_root = 'dataset'
-train_path = 'dataset/train.txt'
-val_path = 'dataset/dev.txt'
-test_path = 'dataset/test.txt'
+train_dir = 'dataset/train'
+val_dir = 'dataset/test'
+test_dir = 'dataset/test'

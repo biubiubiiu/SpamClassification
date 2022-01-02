@@ -19,7 +19,7 @@ def init_tokenizer(config):
 
 def train_dataloader(config):
     tokenizer = init_tokenizer(config)
-    train_data = TextDataset(root=config['train_path'], tokenizer=tokenizer)
+    train_data = TextDataset(root=config['train_dir'], tokenizer=tokenizer)
     dataloader = DataLoader(train_data, batch_size=config['batch_size'],
                             shuffle=True, num_workers=8)
     return dataloader
@@ -27,7 +27,7 @@ def train_dataloader(config):
 
 def val_dataloader(config):
     tokenizer = init_tokenizer(config)
-    train_data = TextDataset(root=config['val_path'], tokenizer=tokenizer)
+    train_data = TextDataset(root=config['val_dir'], tokenizer=tokenizer)
     dataloader = DataLoader(train_data, batch_size=config['batch_size'],
                             shuffle=True, num_workers=8)
     return dataloader
@@ -35,7 +35,7 @@ def val_dataloader(config):
 
 def test_dataloader(config):
     tokenizer = init_tokenizer(config)
-    train_data = TextDataset(root=config['test_path'], tokenizer=tokenizer)
+    train_data = TextDataset(root=config['test_dir'], tokenizer=tokenizer)
     dataloader = DataLoader(train_data, batch_size=1,
                             shuffle=False, num_workers=8)
     return dataloader
