@@ -5,6 +5,7 @@ Fine-Tuning BERT for Spam Classification
 ## Prerequisite
 
 - Linux
+- Python 3
 
 ## Training
 

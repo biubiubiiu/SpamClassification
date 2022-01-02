@@ -1,12 +1,20 @@
-import argparse
+import math
+from typing import Set
+
+from pypinyin import lazy_pinyin
+
+from .utils import random_replace
 
 
-def parse_args():
-    parser = argparse.ArgumentParser(description='Train a spam classifier')
-    parser.add_argument('path', help='text file path')
-    parser.add_argument('--output', help='path to output file')
-    return parser.parse_args()
+def pinyin_augment(line: str) -> Set[str]:
+    pinyin = lazy_pinyin(line)
+    chars = list(line)
+    augmented = set()
 
+    # 随机选两个字换成拼音
+    for _ in range(math.floor(math.sqrt(len(pinyin)))):
+        sample = random_replace(chars, pinyin, 2)
+        augmented.add(''.join(sample))
 
-if __name__ == '__main__':
-    pass
+    # TODO jiema 分词，整个词换成拼音
+    return augmented
