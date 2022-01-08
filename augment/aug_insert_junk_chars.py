@@ -11,7 +11,10 @@ class InsertJunkCharacters(BaseOperation):
         super(InsertJunkCharacters, self).__init__()
         self.junk_chars = list_junk_charaters()
 
-    def __call__(self, s):
+    def can_replace(self, s):
+        return True
+
+    def transform(self, s):
         idx = random.randint(0, len(s))
         char_to_insert = random.choice(self.junk_chars)
         return s[:idx] + char_to_insert + s[idx:]

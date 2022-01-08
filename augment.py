@@ -2,7 +2,7 @@ import argparse
 
 from tqdm import tqdm
 
-from augment import Repeat, InsertJunkCharacters
+from augment import Repeat, CharReplacement, SimplifiedToTraditional
 
 
 def parse_args():
@@ -24,7 +24,7 @@ def main():
 
     # example usage
     pipelines = [
-        Repeat(InsertJunkCharacters(), repeat_times=5)
+        Repeat(CharReplacement(SimplifiedToTraditional()), repeat_times=5)
     ]
 
     output = open(args.output, 'w', encoding='UTF-8')

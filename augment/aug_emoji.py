@@ -1,43 +1,25 @@
-import random
-
 import emoji
 import pypinyin
 
 from .base_operation import BaseOperation
-from .utils import is_chinese_character, first
+from .utils import is_chinese_character
 
 
-class CharacterToEmoji(BaseOperation):
-    """Replace single character to Emoji
+class ToEmoji(BaseOperation):
+    """Transform chinese characters to Emoji"""
 
-       Args:
-           random_pick (bool): if `True`, random pick one character to replace, else
-                   find the first character the can be replaced. Default: `True`
-
-       Returns:
-           The transformed text with one character replaced, or the original text if no
-           transformation coule be done
-   """
-
-    def __init__(self, random_pick=True):
-        super(CharacterToEmoji, self).__init__()
+    def __init__(self):
+        super(ToEmoji, self).__init__()
         self.dict = _dict_char2emoji()
-        self.random_pick = random_pick
 
-    def __call__(self, s):
-        assert isinstance(s, str), f'Input should be a string, but got {type(s)}'
+    def can_replace(self, s):
+        return any(is_chinese_character(c) and pypinyin.lazy_pinyin(c)[0] in self.dict for c in s)
 
-        try:
-            idxs = range(len(s))
-            idxs = list(filter(lambda idx: is_chinese_character(s[idx]), idxs))  # filter non-chinese characters
-            if self.random_pick:
-                random.shuffle(idxs)
-
-            idx_to_replace = first(idxs, lambda idx: pypinyin.lazy_pinyin(s[idx]) in self.dict)
-            replaced_char = self.dict[s[idx_to_replace]]
-            return s[:idx_to_replace] + replaced_char + s[idx_to_replace + 1:]
-        except StopIteration:
-            return s
+    def transform(self, s):
+        chars = list(s)
+        for i, c in enumerate(chars):
+            chars[i] = self.dict.get(c, c)
+        return ''.join(chars)
 
 
 def _dict_char2emoji():
