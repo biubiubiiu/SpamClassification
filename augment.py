@@ -2,7 +2,7 @@ import argparse
 
 from tqdm import tqdm
 
-from augment import pinyin_augment, simplified2traditional_augment
+from augment import Repeat, InsertJunkCharacters
 
 
 def parse_args():
@@ -12,21 +12,26 @@ def parse_args():
     return parser.parse_args()
 
 
-def augment(line):
-    augmented = set()
-    augmented.update(pinyin_augment(line))
-    augmented.update(simplified2traditional_augment(line))
-    return augmented
+def augment(text, pipelines):
+    result = text
+    for pipeline in pipelines:
+        result = pipeline(result)
+    return result
 
 
 def main():
     args = parse_args()
 
-    output = open(args.output, 'w')
+    # example usage
+    pipelines = [
+        Repeat(InsertJunkCharacters(), repeat_times=5)
+    ]
+
+    output = open(args.output, 'w', encoding='UTF-8')
     with open(args.path, 'r', encoding='UTF-8') as f:
         for line in tqdm(f, desc='Process data'):
-            for aug in augment(line):
-                output.write(aug)
+            aug = augment(line, pipelines)
+            output.write(aug)
     output.close()
 
 
