@@ -1,7 +1,10 @@
+from functools import partial
+
 from .bert import Bert
 from .bert_cnn import BertCNN
 from .bert_rcnn import BertRCNN
 from .bert_rnn import BertRNN
+from .compose import ComposedModel
 from .ernie import Ernie
 
 MODELS = {
@@ -15,5 +18,8 @@ MODELS = {
 
 def init_model(config):
     model_name = config['model_name']
-    model = MODELS[model_name]
-    return model(config)
+    create_model = partial(MODELS[model_name], config)
+    return ComposedModel(
+        model4spam=create_model(),
+        model4ham=create_model()
+    )
