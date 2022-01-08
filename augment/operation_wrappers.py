@@ -1,5 +1,7 @@
 import random
 
+import jieba
+
 from .base_operation import BaseOperation
 from .base_wrapper import BaseWrapper
 from .utils import first
@@ -54,5 +56,37 @@ class CharReplacement(BaseWrapper):
             char_to_replace = s[idx_to_replace]
             replaced_char = self.ops.transform(char_to_replace)
             return s[:idx_to_replace] + replaced_char + s[idx_to_replace + 1:]
+        except StopIteration:
+            return s
+
+
+class WordReplacement(BaseWrapper):
+    """A general wrapper for word level replacement
+
+    Args:
+        random_pick (bool): if `True`, random pick one word to replace, else
+                find the first word that can be replaced. Default `True`
+
+    Returns:
+        The transformed text with one word replaced, or the original text if
+        transformation coule be done
+    """
+
+    def __init__(self, ops, random_pick=True):
+        super(WordReplacement, self).__init__(ops)
+        self.random_pick = random_pick
+
+    def transform(self, s):
+        try:
+            partitions = list(jieba.cut(s, cut_all=False))
+            # filter words that cant be replaced
+            idxs = list(filter(lambda idx: self.can_replace(s[idx]), range(len(partitions))))
+            if self.random_pick:
+                random.shuffle(idxs)
+            idx_to_replace = first(idxs)
+            word_to_replace = partitions[idx_to_replace]
+            replaced_word = self.ops.transform(word_to_replace)
+            partitions[idx_to_replace] = replaced_word
+            return ''.join(partitions)
         except StopIteration:
             return s
