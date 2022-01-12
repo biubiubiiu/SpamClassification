@@ -3,7 +3,6 @@ tqdm
 boto3
 scikit-learn
 regex
-torch
 numpy
 pypinyin
 hanziconv
