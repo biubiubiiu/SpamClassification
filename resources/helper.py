@@ -17,7 +17,6 @@ def dict_char_to_huoxing_lang():
 
 
 def dict_char_to_phonetic():
-    print(__file__)
     ret = dict()
     fo = open(osp.join(get_resources_root(), '音近字语料库.txt'), mode='r')
     for line in fo.readlines():

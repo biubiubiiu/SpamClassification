@@ -120,23 +120,17 @@ def main():
     fi = open(args.path, 'r', encoding='UTF-8')
     fo = open(args.output, 'w', encoding='UTF-8')
 
-    idx = 0
-
     result = list()
     for line in tqdm(fi, desc='Process data'):
         result.append(line)  # original text
         result.extend(process(line))  # augmented text
-
-        idx += 1
-        if idx > 4:
-            break
 
         if len(result) > 1000:
             if args.shuffle:
                 random.shuffle(result)
 
             for line in result:  # if not shuffle, write back on the fly
-                fo.write(f'{line}\n')
+                fo.write(f'{line}')
 
     if args.shuffle:
         random.shuffle(result)

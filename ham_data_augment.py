@@ -103,7 +103,7 @@ def main():
                 random.shuffle(result)
 
             for line in result:  # if not shuffle, write back on the fly
-                fo.write(f'{line}\n')
+                fo.write(f'{line}')
 
     if args.shuffle:
         random.shuffle(result)
