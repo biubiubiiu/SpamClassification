@@ -1,4 +1,7 @@
+import random
+
 from resources import dict_char_to_shape_closed
+
 from .base_operation import BaseOperation
 from .utils import is_chinese_character
 
@@ -16,5 +19,5 @@ class ToGlyphSimilar(BaseOperation):
     def transform(self, s):
         chars = list(s)
         for i, c in enumerate(chars):
-            chars[i] = self.dict.get(c, c)
+            chars[i] = random.choice(self.dict.get(c, c))
         return ''.join(chars)
