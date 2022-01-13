@@ -18,7 +18,7 @@ class ToEmoji(BaseOperation):
     def transform(self, s):
         chars = list(s)
         for i, c in enumerate(chars):
-            chars[i] = self.dict.get(c, c)
+            chars[i] = self.dict.get(pypinyin.lazy_pinyin(c)[0], c)
         return ''.join(chars)
 
 
