@@ -31,6 +31,11 @@ def run_pipeline(text, pipelines):
     return result
 
 
+def write_back(lines, f):
+    for line in lines:
+        f.write(line)
+
+
 def process(line):
     """
     Assume text has N chinese characters and M words
@@ -88,10 +93,10 @@ def process(line):
 def main():
     args = parse_args()
 
-    result = list()
-
     fi = open(args.path, 'r', encoding='UTF-8')
     fo = open(args.output, 'w', encoding='UTF-8')
+
+    total_samples = 0
 
     result = list()
     for line in tqdm(fi, desc='Process data'):
@@ -102,17 +107,21 @@ def main():
             if args.shuffle:
                 random.shuffle(result)
 
-            for line in result:  # if not shuffle, write back on the fly
-                fo.write(f'{line}')
+            write_back(result, fo)
+            total_samples += len(result)
+            result.clear()
 
     if args.shuffle:
         random.shuffle(result)
-    for line in result:
-        fo.write(f'{line}')
+
+    write_back(result, fo)
+    total_samples += len(result)
+    result.clear()
 
     fi.close()
     fo.close()
 
+    print(f'{total_samples} augmented samples in total')
 
 if __name__ == '__main__':
     main()

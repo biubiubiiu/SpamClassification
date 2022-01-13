@@ -31,6 +31,11 @@ def run_pipeline(text, pipelines):
     return result
 
 
+def write_back(lines, f):
+    for line in lines:
+        f.write(line)
+
+
 def process(line):
     """
     Assume text has N chinese characters and M words
@@ -66,14 +71,14 @@ def process(line):
 
     # Strategy a
     for n in range(1, n_char_replacement):
-        for op in random.sample(char_replacements, 3):
+        for op in char_replacements:
             pipeline = Repeat(op, repeat_times=n)
             aug = run_pipeline(line, pipeline)
             result.add(aug)
 
     # Strategy b
     for m in range(1, n_word_replacement):
-        for op in random.sample(word_replacements, 2):
+        for op in word_replacements:
             pipeline = Repeat(op, repeat_times=m)
             aug = run_pipeline(line, pipeline)
             result.add(aug)
@@ -115,10 +120,10 @@ def process(line):
 def main():
     args = parse_args()
 
-    result = list()
-
     fi = open(args.path, 'r', encoding='UTF-8')
     fo = open(args.output, 'w', encoding='UTF-8')
+
+    total_samples = 0
 
     result = list()
     for line in tqdm(fi, desc='Process data'):
@@ -129,16 +134,21 @@ def main():
             if args.shuffle:
                 random.shuffle(result)
 
-            for line in result:  # if not shuffle, write back on the fly
-                fo.write(f'{line}')
+            write_back(result, fo)
+            total_samples += len(result)
+            result.clear()
 
     if args.shuffle:
         random.shuffle(result)
-    for line in result:
-        fo.write(f'{line}')
+
+    write_back(result, fo)
+    total_samples += len(result)
+    result.clear()
 
     fi.close()
     fo.close()
+
+    print(f'{total_samples} augmented samples in total')
 
 
 if __name__ == '__main__':
