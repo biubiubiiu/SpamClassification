@@ -18,8 +18,10 @@ MODELS = {
 
 def init_model(config):
     model_name = config['model_name']
-    create_model = partial(MODELS[model_name], config)
-    return ComposedModel(
-        model4spam=create_model(),
-        model4ham=create_model()
-    )
+    return MODELS[model_name](config)
+
+    # create_model = partial(MODELS[model_name], config)
+    # return ComposedModel(
+    #     model4spam=create_model(),
+    #     model4ham=create_model()
+    # )
