@@ -32,17 +32,27 @@ pip install -r requirements.txt
 
 ## Data Augmentation
 
-We use seven types of augmentation method in this project, see [augment/README.md](augment/README.md) for more details
+Based on [SMS and review dataset](https://github.com/Giruvegan/stoneskipping), we synthesize a larger spam text
+dataset with custom augmentation techniques. The dataset before augmentation is placed
+in [dataset/original](dataset/original) and the augmented version is placed in [dataset/augmented](dataset/augmented).
+The augmented dataset is generated with  `spam_data_augment.py` and `ham_data_augment.py`:
 
 ```bash
-python augment.py ${PATH_TO_INPUT} --output ${PATH_TO_OUTPUT}
+python spam_data_augment.py dataset/original/test/spam.txt spam_aug.txt
+python ham_data_augment.py dataset/original/test/ham.txt ham_aug.txt
 ```
 
-For example,
+See [augment/README.md](augment/README.md) for more details.
+
+## Quick Run
+
+To test the [pre-trained model](https://drive.google.com/file/d/1IqkXfJjjYmj1Hj7n_2q83vCMKtlZpcSK/view?usp=sharing), run
 
 ```bash
-python augment.py dataset/train/spam.txt --output spam_aug.txt
+python test.py configs/bert.toml ${PATH_TO_MODEL}
 ```
+
+To test on your own dataset, please modify `test_dir` in config file.
 
 ## Training
 
@@ -68,4 +78,9 @@ This project is under Apache-2.0 License, see [LICENSE](./LICENSE) for more deta
 
 ## Acknowledgement
 
-We thank [Bert-Chinese-Text-Classification-PyTorch](https://github.com/649453932/Bert-Chinese-Text-Classification-Pytorch), [textConversion](https://github.com/Niefee/textConversion), [AbstractCN](https://github.com/blackfrog638/AbstractCN), [zh2emoji](https://github.com/techkang/zh2emoji) for their work, and [StoneSkipping](https://github.com/Giruvegan/stoneskipping), [SimilarCharacter](https://github.com/contr4l/SimilarCharacter) for sharing dataset  
+We
+thank [Bert-Chinese-Text-Classification-PyTorch](https://github.com/649453932/Bert-Chinese-Text-Classification-Pytorch)
+, [textConversion](https://github.com/Niefee/textConversion), [AbstractCN](https://github.com/blackfrog638/AbstractCN)
+, [zh2emoji](https://github.com/techkang/zh2emoji) for their work,
+and [StoneSkipping](https://github.com/Giruvegan/stoneskipping)
+, [SimilarCharacter](https://github.com/contr4l/SimilarCharacter) for sharing dataset  
