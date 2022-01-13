@@ -37,12 +37,12 @@ if __name__ == '__main__':
         for (tokens, labels) in tqdm(data_loader):
             for idx, item in enumerate(tokens):
                 tokens[idx] = item.to(device)
-            labels = labels.to(device)
 
             outputs = model(tokens)
+            pred = torch.argmax(outputs, dim=1).cpu().numpy().reshape(-1)
 
-            labels = labels.cpu().numpy()[0]
-            pred = torch.argmax(outputs, dim=1).cpu().numpy()[0]
+            labels = labels.numpy().reshape(-1)
+
             labels_all = np.append(labels_all, labels)
             predict_all = np.append(predict_all, pred)
 

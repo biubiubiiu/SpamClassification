@@ -32,19 +32,26 @@ class Trainer:
         self.train_loader = train_loader
         self.test_data = test_data
 
+    @property
+    def work_dir(self):
+        if self.config is None:
+            raise AttributeError('use `set_config()` to initialize `config`')
+        return self.config.get('work_dir', None)
+
     def build(self):
         if self.model is None:
-            raise AttributeError('using `set_model()` to initialize `model`')
+            raise AttributeError('use `set_model()` to initialize `model`')
         if self.config is None:
-            raise AttributeError('using `set_config()` to initialize `config`')
+            raise AttributeError('use `set_config()` to initialize `config`')
         if self.train_loader is None or self.test_data is None:
-            raise AttributeError('using `set_data()` to initialize `data`')
+            raise AttributeError('use `set_data()` to initialize `data`')
 
         param_optimizer = list(self.model.named_parameters())
         no_decay = ['bias', 'LayerNorm.bias', 'LayerNorm.weight']
         optimizer_grouped_parameters = [
             {'params': [p for n, p in param_optimizer if not any(nd in n for nd in no_decay)], 'weight_decay': 0.01},
-            {'params': [p for n, p in param_optimizer if any(nd in n for nd in no_decay)], 'weight_decay': 0.0}]
+            {'params': [p for n, p in param_optimizer if any(nd in n for nd in no_decay)], 'weight_decay': 0.0}
+        ]
 
         self.optimizer = BertAdam(
             optimizer_grouped_parameters,
@@ -63,9 +70,10 @@ class Trainer:
         for epoch in range(epochs):
             train_loss = self.train()
             eval_acc = self.evaluate()
-            if eval_acc > best_acc:
+            is_best = eval_acc > best_acc
+            if is_best:
                 best_acc = eval_acc
-                self.save_model()
+            self.save_model(epoch, is_best)
             logging.info('Epoch: {}, Train Loss: {}'.format(epoch, train_loss))
             logging.info('Epoch: {}, Eval Accuracy: {}'.format(epoch, eval_acc))
 
@@ -99,15 +107,18 @@ class Trainer:
 
                 outputs = self.model(tokens)
 
-                labels = labels.cpu().numpy()[0]
-                pred = torch.argmax(outputs, dim=1).cpu().numpy()[0]
+                labels = labels.numpy().reshape(-1)
+                pred = torch.argmax(outputs, dim=1).cpu().numpy().reshape(-1)
                 labels_all = np.append(labels_all, labels)
                 predict_all = np.append(predict_all, pred)
 
         acc = metrics.accuracy_score(labels_all, predict_all)
         return acc
 
-    def save_model(self):
-        save_path = 'work_dir/model_best.pth'
-        os.makedirs(os.path.split(save_path)[0], exist_ok=True)
-        torch.save(self.model.state_dict(), save_path)
+    def save_model(self, epoch, is_best):
+        work_dir = self.work_dir
+        os.makedirs(work_dir, exist_ok=True)
+
+        torch.save(self.model.state_dict(), os.path.join(work_dir, f'model_epoch_{epoch}.pth'))
+        if is_best:
+            torch.save(self.model.state_dict(), os.path.join(work_dir, f'model_best.pth'))

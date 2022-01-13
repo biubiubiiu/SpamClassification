@@ -36,6 +36,6 @@ def val_dataloader(config):
 def test_dataloader(config):
     tokenizer = init_tokenizer(config)
     train_data = TextDataset(root=config['test_dir'], tokenizer=tokenizer)
-    dataloader = DataLoader(train_data, batch_size=1,
+    dataloader = DataLoader(train_data, batch_size=128,
                             shuffle=False, num_workers=8)
     return dataloader
