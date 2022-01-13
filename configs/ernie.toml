@@ -12,7 +12,9 @@ base_lr = 5e-5
 warmup = 0.05
 
 # >>> data
-data_root = 'dataset'
-train_dir = 'dataset/train'
-val_dir = 'dataset/test'
-test_dir = 'dataset/test'
+train_dir = 'dataset/augmented/train'
+val_dir = 'dataset/augmented/test'
+test_dir = 'dataset/augmented/test'
+
+# >>> custom
+work_dir = 'work_dir/ernie'
