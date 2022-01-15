@@ -1,6 +1,6 @@
 # SpamClassification
 
-Fine-Tuning BERT for Spam Classification
+Improving Spam Classifition Accuracy via Data Augmentation
 
 ## Prerequisite
 
